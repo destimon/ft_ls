@@ -1,21 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   processes.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/17 16:02:51 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/17 17:14:36 by dcherend         ###   ########.fr       */
+/*   Created: 2018/06/17 16:56:54 by dcherend          #+#    #+#             */
+/*   Updated: 2018/06/17 18:41:51 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
-int			main(int argc, char **argv)
+void				ft_list(char *name)
 {
-	if (argc >= 1)
-    {
-        ft_flags(argv, argc);
-    }
+	DIR 			*dir;
+	struct dirent 	*sd;
+
+	if (!(dir = opendir(name)))
+		exit(0);
+	while ((sd = readdir(dir)))
+	{
+		if (sd->d_name[0] != '.')
+		{
+			ft_putendl(sd->d_name);
+		}
+	}
 }
