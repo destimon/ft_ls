@@ -6,41 +6,64 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 16:56:54 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/18 15:45:15 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/18 17:39:20 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
-int					ft_fetchdir(char *name)
+t_dirs 				*ft_fetchdir(char *name)
 {
 	DIR 			*dir;
 	struct dirent 	*sd;
-
+	t_dirs 			*mydir;
+	
 	if (!(dir = opendir(name)))
-	{
-		ft_putstr(name);
-		ft_putstr(": ");
-		ft_putendl(strerror(errno));
-		return (-1);
-	}
-	while ((sd = readdir(dir)))
-	{
-		
-	}
+		return ((t_dirs*)throw_direrr(name, strerror(errno)));
+	mydir = dirs_alloc(dir);
+	// while ((sd = readdir(dir)))
+	// {
+	// 	mydir-> = sd;
+	// }
 	closedir(dir);
-	return (0);
+	return (mydir);
 }
 
-void				ft_list(t_query *qu)
+t_dirs				*ft_list(t_query *qu)
 {
+	int 			i;
+	t_dirs 			*mydir;
+	t_dirs 			*nextdir;
+	t_dirs 			*start;
 
-	int i = 0;
-	int j = 0;
-	
-	while (qu->fnames[j])
+	i = 0;
+	mydir = ft_fetchdir(qu->fnames[i++]);
+	if (mydir)
+		start = mydir;
+	while (qu->fnames[i])
 	{
-		ft_fetchdir(qu->fnames[j]);
-		j++;
+		if (mydir)
+		{
+			if ((nextdir = ft_fetchdir(qu->fnames[i])))
+			{
+				mydir->next = nextdir;
+				mydir = nextdir;
+			}
+		}
+		i++;
+	}
+	return (start);
+}
+
+void			ft_output(t_dirs *dir)
+{
+	int i;
+
+	i = 0;
+	while (dir)
+	{
+		printf("[%d] %p\n", i, dir);
+		i++;
+		dir = dir->next;
 	}
 }

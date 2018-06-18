@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 15:22:34 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/18 15:34:03 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/18 17:50:06 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void			ft_names(t_query *qu, char **fnames, int size)
 	int 		i;
 
 	i = 0;
-	qu->fnames = (char**)ft_memalloc(size);
+	qu->fnames = (char**)malloc((sizeof(char*) * size + 1));
 	while (i < size)
 	{
 		qu->fnames[i] = ft_strdup(fnames[i]);
@@ -81,5 +81,11 @@ t_query			*ft_flags(char **av, int ac)
 		i++;
 	}
 	ft_names(qu, &av[i], ac - i);
+	int j = 0;
+	while (qu->fnames[j])
+	{
+		printf("[%d]{%zu}name: %s\n", j, ft_strlen(qu->fnames[j]), qu->fnames[j]);
+		j++;
+	}
 	return (qu);
 }
