@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 16:02:43 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/17 17:12:17 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/18 15:26:50 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,29 @@
 # include <unistd.h>
 # include <sys/types.h>
 # include <dirent.h>
+# include <stdio.h>
+# include <string.h>
+# include <errno.h>
 
-typedef union 		s_query
+# define FL_SIZE 	5
+
+typedef struct 		s_query
 {
+	char 			fl[6];
 	char 			**fnames;
 }					t_query;
 
-void				ft_flags(char **av, int ac);
-void 				ft_list(char *name);
+
+// utils
+void        		throw_error(char *err, char opt);
+
+// flags
+t_query				*ft_flags(char **av, int ac);
+void 				ft_list(t_query *qu);
+
+
+// query
+t_query				*ft_qalloc();
+void				ft_qfree(t_query *qu);
+
 #endif

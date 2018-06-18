@@ -6,24 +6,41 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 16:56:54 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/17 18:41:51 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/18 15:45:15 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
-void				ft_list(char *name)
+int					ft_fetchdir(char *name)
 {
 	DIR 			*dir;
 	struct dirent 	*sd;
 
 	if (!(dir = opendir(name)))
-		exit(0);
+	{
+		ft_putstr(name);
+		ft_putstr(": ");
+		ft_putendl(strerror(errno));
+		return (-1);
+	}
 	while ((sd = readdir(dir)))
 	{
-		if (sd->d_name[0] != '.')
-		{
-			ft_putendl(sd->d_name);
-		}
+		
+	}
+	closedir(dir);
+	return (0);
+}
+
+void				ft_list(t_query *qu)
+{
+
+	int i = 0;
+	int j = 0;
+	
+	while (qu->fnames[j])
+	{
+		ft_fetchdir(qu->fnames[j]);
+		j++;
 	}
 }
