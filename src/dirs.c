@@ -6,19 +6,20 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/18 16:33:09 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/18 17:31:02 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/18 18:28:51 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
-t_dirs			*dirs_alloc(DIR *directory)
+t_dirs			*dirs_alloc(DIR *directory, char *name)
 {
 	t_dirs		*dirs;
 
-	if (!(dirs = (t_dirs*)malloc(sizeof(dirs))))
+	if (!(dirs = (t_dirs*)malloc(sizeof(t_dirs))))
 		return ((t_dirs*)ERR);
 	dirs->odir = directory;
+	dirs->name = name;
 	dirs->next = NULL;
 	return (dirs);
 }

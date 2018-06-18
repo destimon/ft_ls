@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 16:02:43 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/18 17:29:36 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/18 18:30:17 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct 		s_query
 
 typedef struct 		s_dirs
 {
+	char 			*name;
 	DIR			 	*odir;
 	DIR 			**subs;
 	struct s_dirs 	*next;
@@ -52,7 +53,7 @@ t_query				*ft_qalloc();
 void				ft_qfree(t_query *qu);
 
 // dirs
-t_dirs				*dirs_alloc(DIR *directory);
+t_dirs				*dirs_alloc(DIR *directory, char *name);
 void				dirs_free(t_dirs *dirs);
 
 #endif

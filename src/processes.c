@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 16:56:54 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/18 17:39:20 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/18 18:41:52 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ t_dirs 				*ft_fetchdir(char *name)
 	
 	if (!(dir = opendir(name)))
 		return ((t_dirs*)throw_direrr(name, strerror(errno)));
-	mydir = dirs_alloc(dir);
+	mydir = dirs_alloc(dir, name);
 	// while ((sd = readdir(dir)))
 	// {
 	// 	mydir-> = sd;
 	// }
-	closedir(dir);
+	//closedir(dir);
 	return (mydir);
 }
 
@@ -40,30 +40,41 @@ t_dirs				*ft_list(t_query *qu)
 	mydir = ft_fetchdir(qu->fnames[i++]);
 	if (mydir)
 		start = mydir;
-	while (qu->fnames[i])
+	if (mydir)
 	{
-		if (mydir)
+		while (qu->fnames[i])
 		{
 			if ((nextdir = ft_fetchdir(qu->fnames[i])))
 			{
 				mydir->next = nextdir;
 				mydir = nextdir;
 			}
+			i++;
 		}
-		i++;
+		return (start);
 	}
-	return (start);
+	return (NULL);
 }
 
-void			ft_output(t_dirs *dir)
+void				ft_output(t_dirs *dir)
 {
-	int i;
-
-	i = 0;
+	struct dirent	*sd;
+	
 	while (dir)
 	{
-		printf("[%d] %p\n", i, dir);
-		i++;
+		ft_putstr(dir->name);
+		ft_putendl(":");
+		while ((sd = readdir(dir->odir)))
+		{
+			if (sd->d_name[0] != '.')
+			{
+				ft_putstr(sd->d_name);
+				ft_putstr("\t");
+			}
+		}
+		ft_putstr("\n");
+		if (dir->next)
+			ft_putstr("\n");
 		dir = dir->next;
 	}
 }
