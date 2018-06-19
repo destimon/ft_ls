@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 15:22:34 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/18 18:11:45 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/19 13:26:01 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,11 @@ t_query			*ft_flags(char **av, int ac)
 			break;
 		ft_options(qu, av[i]);
 		i++;
+	}
+	if (ac - i == 0)
+	{
+		av[i] = ft_strdup(".");
+		ac++;
 	}
 	ft_names(qu, &av[i], ac - i);
 	return (qu);

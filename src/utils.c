@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/18 14:24:06 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/18 17:29:14 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/19 13:46:45 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void			throw_error(char *err, char opt)
 
 void			*throw_direrr(char *name, char *err)
 {
+	ft_putstr("ft_ls: ");
 	ft_putstr(name);
 	ft_putstr(": ");
 	ft_putendl(err);

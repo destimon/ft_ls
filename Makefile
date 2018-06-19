@@ -6,7 +6,7 @@
 #    By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/17 15:19:05 by dcherend          #+#    #+#              #
-#    Updated: 2018/06/18 17:29:49 by dcherend         ###   ########.fr        #
+#    Updated: 2018/06/19 13:49:09 by dcherend         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ HDR_DIR 		= ./include/
 CC 				= gcc
 CFLAGS 			= -Wall -Werror -Wextra -I$(HDR_DIR) -I$(LIB_HDR_DIR)
 
-SRC 			= main.c processes.c query.c flags.c utils.c dirs.c
+SRC 			= main.c processes.c query.c flags.c utils.c dirs.c modify.c
 OBJ 			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
 LIB_BIN 		= $(LIB_DIR)libft.a

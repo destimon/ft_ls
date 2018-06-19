@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 16:02:51 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/18 17:23:56 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/19 14:01:14 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int			main(int argc, char **argv)
 	{
 		qu = ft_flags(argv, argc);
 		dir = ft_list(qu);
-		ft_output(dir);
+		ft_output(qu, dir);
 	}
 	return (0);
 }

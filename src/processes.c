@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 16:56:54 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/18 18:41:52 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/19 18:49:37 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,67 +14,64 @@
 
 t_dirs 				*ft_fetchdir(char *name)
 {
-	DIR 			*dir;
-	struct dirent 	*sd;
-	t_dirs 			*mydir;
+	t_dirs 			*dire;
+	DIR 			*directory;
+	t_dirs 			*tmp;
 	
-	if (!(dir = opendir(name)))
-		return ((t_dirs*)throw_direrr(name, strerror(errno)));
-	mydir = dirs_alloc(dir, name);
-	// while ((sd = readdir(dir)))
-	// {
-	// 	mydir-> = sd;
-	// }
-	//closedir(dir);
-	return (mydir);
+	if (!(directory = opendir(name)))
+		return (throw_direrr(name, strerror(errno)));
+	dire = dirs_alloc(directory, name);
+	tmp = dire;
+	while (tmp->file)
+	{
+		if (tmp->file->type == DT_DIR && tmp->file->name[0] != '.')
+		{
+
+			// Make normal Recursion
+			//
+			// Also need to make path instead name file
+			// Things like strjoin may be useful
+			// Should add variable "path" in struct
+
+		}
+		tmp->file = tmp->file->next;
+	}
+	return (dire);
 }
 
 t_dirs				*ft_list(t_query *qu)
 {
-	int 			i;
-	t_dirs 			*mydir;
-	t_dirs 			*nextdir;
+	t_dirs			*one;
 	t_dirs 			*start;
+	int 			i;
 
 	i = 0;
-	mydir = ft_fetchdir(qu->fnames[i++]);
-	if (mydir)
-		start = mydir;
-	if (mydir)
+	while (qu->fnames[i])
 	{
-		while (qu->fnames[i])
-		{
-			if ((nextdir = ft_fetchdir(qu->fnames[i])))
-			{
-				mydir->next = nextdir;
-				mydir = nextdir;
-			}
-			i++;
-		}
-		return (start);
+		if ((one = ft_fetchdir(qu->fnames[i])))
+			break;
+		i++;
 	}
-	return (NULL);
+	start = one;
+	i += 1;
+	while (qu->fnames[i])
+	{
+		one->next = ft_fetchdir(qu->fnames[i]);
+		one = one->next;
+		i++;
+	}
+	return (start);
 }
 
-void				ft_output(t_dirs *dir)
+void				ft_output(t_query *qu, t_dirs *dir)
 {
-	struct dirent	*sd;
-	
 	while (dir)
 	{
-		ft_putstr(dir->name);
-		ft_putendl(":");
-		while ((sd = readdir(dir->odir)))
+		while (dir->file)
 		{
-			if (sd->d_name[0] != '.')
-			{
-				ft_putstr(sd->d_name);
-				ft_putstr("\t");
-			}
+			printf("%s\n", dir->file->name);
+			dir->file = dir->file->next;
 		}
-		ft_putstr("\n");
-		if (dir->next)
-			ft_putstr("\n");
 		dir = dir->next;
 	}
 }

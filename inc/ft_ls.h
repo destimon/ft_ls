@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 16:02:43 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/18 18:30:17 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/19 19:01:06 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,18 @@ typedef struct 		s_query
 	char 			**fnames;
 }					t_query;
 
+typedef struct 		s_file
+{
+	char 			*name;
+	unsigned char 	type;
+	struct s_file 	*next;
+}					t_file;
+
 typedef struct 		s_dirs
 {
 	char 			*name;
-	DIR			 	*odir;
-	DIR 			**subs;
+	char 			*path;
+	t_file 			*file;	
 	struct s_dirs 	*next;
 }					t_dirs;
 
@@ -46,7 +53,7 @@ void				*throw_direrr(char *name, char *err);
 // flags
 t_query				*ft_flags(char **av, int ac);
 t_dirs 				*ft_list(t_query *qu);
-void				ft_output(t_dirs *dir);
+void				ft_output(t_query *qu, t_dirs *dir);
 
 // query
 t_query				*ft_qalloc();
@@ -55,5 +62,8 @@ void				ft_qfree(t_query *qu);
 // dirs
 t_dirs				*dirs_alloc(DIR *directory, char *name);
 void				dirs_free(t_dirs *dirs);
+
+// modify
+void 	           ft_order(t_query *qu);
 
 #endif
