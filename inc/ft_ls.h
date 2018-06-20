@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 16:02:43 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/19 19:01:06 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/20 18:21:16 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 # include "../lib/libft/libft.h"
 # include <unistd.h>
 # include <sys/types.h>
+# include <sys/stat.h>
+# include <pwd.h>
+# include <grp.h>
+# include <time.h>
 # include <dirent.h>
 # include <stdio.h>
 # include <string.h>
@@ -35,6 +39,7 @@ typedef struct 		s_file
 {
 	char 			*name;
 	unsigned char 	type;
+	struct stat 	stats;
 	struct s_file 	*next;
 }					t_file;
 
@@ -64,6 +69,11 @@ t_dirs				*dirs_alloc(DIR *directory, char *name);
 void				dirs_free(t_dirs *dirs);
 
 // modify
-void 	           ft_order(t_query *qu);
+void 	           	ft_order(t_query *qu);
+void				ft_show_listed(t_dirs *dir, t_query *qu);
+
+// printf
+void				print_align(int len);
+int        			ft_biggest_name(t_file *file);
 
 #endif

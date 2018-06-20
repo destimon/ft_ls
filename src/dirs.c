@@ -6,13 +6,13 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/18 16:33:09 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/19 18:48:53 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/20 18:09:33 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
-t_file 					*file_alloc(struct dirent *sd)
+t_file 					*file_alloc(struct dirent *sd, char *path)
 {
 	t_file 				*file;
 	
@@ -20,6 +20,8 @@ t_file 					*file_alloc(struct dirent *sd)
 		return (NULL);
 	file->name = sd->d_name;
 	file->type = sd->d_type;
+	if ((stat(ft_strjoin(path, sd->d_name), &file->stats) < 0))
+		throw_error(strerror(errno), 'm');
 	file->next = NULL;
 	return (file);
 }
@@ -34,11 +36,12 @@ t_dirs					*dirs_alloc(DIR *directory, char *name)
 	if (!(dirs = (t_dirs*)malloc(sizeof(t_dirs))))
 		return ((t_dirs*)ERR);
 	dirs->name = name;
-	copy = file_alloc(readdir(directory));
+	dirs->path = ft_strjoin(name, "/");
+	copy = file_alloc(readdir(directory), dirs->path);
 	file = copy;
 	while ((sd = readdir(directory)))
 	{
-		copy->next = file_alloc(sd);
+		copy->next = file_alloc(sd, dirs->path);
 		copy = copy->next;
 	}
 	closedir(directory);

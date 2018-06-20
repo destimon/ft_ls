@@ -6,14 +6,14 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 13:27:19 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/19 14:23:20 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/20 14:45:37 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
 // just can move func to libft
-void            ft_order(t_query *qu)
+void		ft_order(t_query *qu)
 {
     int     i;
     int     check;
