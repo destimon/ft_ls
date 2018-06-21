@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/18 16:33:09 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/20 18:09:33 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/21 19:22:48 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,14 @@
 t_file 					*file_alloc(struct dirent *sd, char *path)
 {
 	t_file 				*file;
-	
+	char 				*str;
+
 	if (!(file = (t_file*)malloc(sizeof(t_file))))
 		return (NULL);
 	file->name = sd->d_name;
 	file->type = sd->d_type;
-	if ((stat(ft_strjoin(path, sd->d_name), &file->stats) < 0))
+	str = ft_strjoin(path, sd->d_name);
+	if ((stat(str, &file->stats) < 0))
 		throw_error(strerror(errno), 'm');
 	file->next = NULL;
 	return (file);
@@ -44,7 +46,6 @@ t_dirs					*dirs_alloc(DIR *directory, char *name)
 		copy->next = file_alloc(sd, dirs->path);
 		copy = copy->next;
 	}
-	closedir(directory);
 	dirs->file = file;
 	dirs->next = NULL;
 	return (dirs);

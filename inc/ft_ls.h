@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 16:02:43 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/20 18:21:16 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/21 15:19:54 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct 		s_dirs
 
 // utils
 void        		throw_error(char *err, char opt);
-void				*throw_direrr(char *name, char *err);
+t_dirs				*throw_direrr(char *name, char *err);
 
 // flags
 t_query				*ft_flags(char **av, int ac);
@@ -71,9 +71,14 @@ void				dirs_free(t_dirs *dirs);
 // modify
 void 	           	ft_order(t_query *qu);
 void				ft_show_listed(t_dirs *dir, t_query *qu);
+void				ft_show_simple(t_dirs *dir, t_query *qu);
 
 // printf
 void				print_align(int len);
 int        			ft_biggest_name(t_file *file);
+
+// sorting
+void				ft_file_sort(t_query *qu, t_file *file);
+void				ft_dirs_sort(t_query *qu, t_dirs *dir);
 
 #endif

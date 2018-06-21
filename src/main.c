@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/17 16:02:51 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/19 14:01:14 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/06/21 16:20:24 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int			main(int argc, char **argv)
 	if (argc >= 1)
 	{
 		qu = ft_flags(argv, argc);
+		ft_order(qu);
 		dir = ft_list(qu);
 		ft_output(qu, dir);
 	}

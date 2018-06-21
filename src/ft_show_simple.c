@@ -1,35 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_show_simple.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/18 14:24:06 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/21 17:25:06 by dcherend         ###   ########.fr       */
+/*   Created: 2018/06/21 15:15:05 by dcherend          #+#    #+#             */
+/*   Updated: 2018/06/21 15:23:33 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
-void			throw_error(char *err, char opt)
+void        ft_show_simple(t_dirs *dir, t_query *qu)
 {
-	ft_putstr("ft_ls: ");
-	ft_putstr(err);
-	if (opt)
+	while (dir->file)
 	{
-		ft_putchar(opt);
-		ft_putstr("\nusage: ft_ls [-lRart] [file ...]");
+		if (ft_strchr(qu->fl, 'a') || dir->file->name[0] != '.')
+			ft_putendl(dir->file->name);
+		dir->file = dir->file->next;
 	}
-	ft_putstr("\n");
-	exit(0);
-}
-
-t_dirs			*throw_direrr(char *name, char *err)
-{
-	ft_putstr("ft_ls: ");
-	ft_putstr(name);
-	ft_putstr(": ");
-	ft_putendl(err);
-	return (NULL);
 }
