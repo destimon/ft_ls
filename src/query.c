@@ -5,16 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/17 15:45:16 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/18 14:10:37 by dcherend         ###   ########.fr       */
+/*   Created: 2018/06/22 12:42:28 by dcherend          #+#    #+#             */
+/*   Updated: 2018/07/04 18:41:47 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
-t_query			*ft_qalloc()
+t_query			*ft_qalloc(void)
 {
-	t_query 	*qu;
+	t_query		*qu;
 
 	if (!(qu = (t_query*)malloc(sizeof(t_query))))
 		return (NULL);

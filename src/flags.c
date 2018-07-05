@@ -5,16 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/17 15:22:34 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/19 13:26:01 by dcherend         ###   ########.fr       */
+/*   Created: 2018/06/22 12:41:52 by dcherend          #+#    #+#             */
+/*   Updated: 2018/07/04 19:01:52 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
-int				ft_cmpflags(t_query *qu, char flag)
+static int		ft_cmpflags(t_query *qu, char flag)
 {
-	int 		i;
+	int			i;
 
 	i = 0;
 	while (i < FL_SIZE)
@@ -36,47 +36,56 @@ int				ft_cmpflags(t_query *qu, char flag)
 	return (0);
 }
 
-void 			ft_options(t_query *qu, char *opt)
+static void		ft_options(t_query *qu, char *opt)
 {
-	int 		i;
+	int			i;
 
 	i = 1;
 	while (opt[i])
 	{
 		if (opt[i] == 'l' || opt[i] == 'R' || opt[i] == 'a' ||
-			opt[i] == 'r' || opt[i] == 't')
+			opt[i] == 'r' || opt[i] == 't' || opt[i] == 'G')
 			ft_cmpflags(qu, opt[i]);
 		else
-			throw_error("illegal option -- ", opt[i]);
+			ft_wrong_option(opt[i]);
 		i++;
 	}
 }
 
-void			ft_names(t_query *qu, char **fnames, int size)
+static void		ft_names(t_query *qu, char **fnames, int size)
 {
-	int 		i;
+	int			i;
 
 	i = 0;
-	qu->fnames = (char**)malloc((sizeof(char*) * size + 1));
-	while (i < size)
+	if (ft_elems(fnames) > 0)
 	{
-		qu->fnames[i] = ft_strdup(fnames[i]);
-		i++;
+		qu->fnames = (char**)malloc((sizeof(char*) * size + 1));
+		while (i < size)
+		{
+			qu->fnames[i] = ft_strdup(fnames[i]);
+			i++;
+		}
+		qu->fnames[size] = NULL;
 	}
-	qu->fnames[size] = NULL;
+	else
+	{
+		qu->fnames = (char**)malloc((sizeof(char*) * 1 + 1));
+		qu->fnames[0] = ft_strdup(".");
+		qu->fnames[1] = NULL;
+	}
 }
 
 t_query			*ft_flags(char **av, int ac)
 {
-	int			i;
 	t_query		*qu;
-	
+	int			i;
+
 	qu = ft_qalloc();
 	i = 1;
 	while (av[i])
 	{
 		if (av[i][0] != '-')
-			break;
+			break ;
 		ft_options(qu, av[i]);
 		i++;
 	}

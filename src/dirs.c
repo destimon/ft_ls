@@ -3,52 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   dirs.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dcherend <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/18 16:33:09 by dcherend          #+#    #+#             */
-/*   Updated: 2018/06/21 19:22:48 by dcherend         ###   ########.fr       */
+/*   Created: 2018/06/22 13:03:54 by dcherend          #+#    #+#             */
+/*   Updated: 2018/07/05 19:16:15 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
-t_file 					*file_alloc(struct dirent *sd, char *path)
-{
-	t_file 				*file;
-	char 				*str;
-
-	if (!(file = (t_file*)malloc(sizeof(t_file))))
-		return (NULL);
-	file->name = sd->d_name;
-	file->type = sd->d_type;
-	str = ft_strjoin(path, sd->d_name);
-	if ((stat(str, &file->stats) < 0))
-		throw_error(strerror(errno), 'm');
-	file->next = NULL;
-	return (file);
-}
-
-t_dirs					*dirs_alloc(DIR *directory, char *name)
+t_dirs					*dirs_alloc(char *name)
 {
 	t_dirs				*dirs;
-	t_file 				*copy;
-	t_file 				*file;
-	struct dirent 		*sd;
+	DIR					*dir;
+	char				*slash;
+	struct dirent		*sd;
+	struct stat			stats;
 
-	if (!(dirs = (t_dirs*)malloc(sizeof(t_dirs))))
-		return ((t_dirs*)ERR);
-	dirs->name = name;
-	dirs->path = ft_strjoin(name, "/");
-	copy = file_alloc(readdir(directory), dirs->path);
-	file = copy;
-	while ((sd = readdir(directory)))
+	if ((dir = opendir(name)))
 	{
-		copy->next = file_alloc(sd, dirs->path);
-		copy = copy->next;
+		if (!(dirs = (t_dirs*)malloc(sizeof(t_dirs))))
+			return (NULL);
+		slash = ft_strdup("/");
+		dirs->name = ft_strdup(name);
+		dirs->path = ft_strjoin(name, slash);
+		lstat(dirs->path, &stats);
+		dirs->mtime = stats.st_mtimespec;
+		free(name);
+		free(slash);
+		dirs->dirstruct = dir;
+		dirs->file = NULL;
+		dirs->next = NULL;
+		return (dirs);
 	}
-	dirs->file = file;
-	dirs->next = NULL;
-	return (dirs);
+	else
+		ft_wrong_dir(strerror(errno), name);
+	return (NULL);
 }
 
 void					dirs_free(t_dirs *dirs)
@@ -62,4 +52,45 @@ void					dirs_free(t_dirs *dirs)
 		}
 		ft_memdel((void**)dirs);
 	}
+}
+
+t_dirs					*ft_passdirs(t_query *qu, char **fnames)
+{
+	int 				i;
+	t_dirs 				*dir;
+	t_dirs 				*start;
+	t_dirs 				*nw;
+	_Bool 				check;
+
+	i = 0;
+	check = 0;
+	while (fnames[i])
+	{
+		if ((nw = dirs_alloc(fnames[i])))
+		{
+			dir = nw;
+			start = dir;
+			check = 1;
+			break;
+		}
+		i++;
+	}
+	if ((check == 0 || ft_elems(fnames) == 0))
+		return (NULL);
+	if (ft_elems(fnames) > 0 && nw)
+	{
+		i += 1;
+		while (fnames[i])
+		{
+			nw = dirs_alloc(fnames[i]);
+			if (nw)
+			{
+				check = 1;
+				dir->next = nw;
+				dir = dir->next;
+			}
+			i++;
+		}
+	}
+	return (start);
 }
