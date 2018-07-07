@@ -3,37 +3,41 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dcherend <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/06/17 15:19:05 by dcherend          #+#    #+#              #
-#    Updated: 2018/07/05 15:05:09 by dcherend         ###   ########.fr        #
+#    Updated: 2018/07/07 13:25:36 by dcherend         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME 			= ft_ls
 
-LIB_DIR 		= ./lib/libft/
-LIB_HDR_DIR 	= ./lib/libft/include/
+LIBFT 			= $(LIBFT_DIR)libft.a
+LIBFT_DIR 		= $(LIB_DIR)libft/
+LIBFT_INC 		= $(LIBFT_DIR)$(INC_DIR)
+LIBFT_FLAGS 	= -lft -L $(LIBFT_DIR)
+LIBFT_DIR 		= ./lib/libft/
+LIBFT_HDR_DIR 	= ./lib/libft/
 OBJ_DIR 		= ./obj/
 SRC_DIR 		= ./src/
 HDR_DIR 		= ./include/
 
 CC 				= gcc
-CFLAGS 			= -Wall -Werror -Wextra -I$(HDR_DIR) -I$(LIB_HDR_DIR)
+CFLAGS 			= -Wall -Werror -Wextra -I$(HDR_DIR) -I$(LIBFT_HDR_DIR)
 
 SRC 			= main.c query.c flags.c errors.c sort.c sort2.c dirs.c \
 					show.c files.c recursion.c show_listed.c stuff.c \
-					padding.c padding2.c memory.c
+					padding.c padding2.c attribs.c
 OBJ 			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
-LIB_BIN 		= $(LIB_DIR)libft.a
-LIB_FLAGS 		= -lft -L$(LIB_DIR)
-LIB 			= $(MAKE) -C $(LIB_DIR)
+LIB_BIN 		= $(LIBFT_DIR)libft.a
+LIB_FLAGS 		= -lft -L$(LIBFT_DIR)
+LIB 			= $(MAKE) -C $(LIBFT_DIR)
 
 all: $(NAME)
 
-$(NAME): $(LIB) $(OBJ)
-	$(CC) $(OBJ) $(LIB_FLAGS) -o $(NAME)
+$(NAME): $(LIBFT) $(OBJ)
+	$(CC) $(OBJ) $(LIBFT_FLAGS) -o $(NAME)
 
 $(OBJ): | $(OBJ_DIR)
 
@@ -41,19 +45,20 @@ $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	$(CC) -c $< -o $@ # $(CFLAGS)
+	$(CC) -c $< -o $@ $(HEADERS_FLAGS) $(CC_FLAGS)
 
-$(LIB):
-	make -C $(LIB_DIR)
+$(LIBFT):
+	make -C $(LIBFT_DIR)
 
 clean:
-	/bin/rm -rf $(OBJ_DIR)
-	make clean -C $(LIB_DIR)
+	rm -f $(OBJ)
+	make clean -C $(LIBFT_DIR)
+
 fclean: clean
-	/bin/rm -rf $(OBJ)
-	/bin/rm -rf $(NAME)
-	make fclean -C $(LIB_DIR)
+	rm -f $(NAME)
+	rm -rf $(OBJ_DIR)
+	make fclean -C $(LIBFT_DIR)
+
 re: fclean all
 
-love:
-	@echo "Not war."
+.PHONY: all clean fclean re

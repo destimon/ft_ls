@@ -6,7 +6,7 @@
 /*   By: dcherend <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/05 12:42:19 by dcherend          #+#    #+#             */
-/*   Updated: 2018/07/05 19:48:20 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/07/06 19:16:09 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 _Bool			ft_justfiles(t_query *qu)
 {
-	t_file		*file;
 	struct stat	stats;
-	int 		i;
+	t_file		*file;
+	int			i;
 
 	i = 0;
 	while (qu->fnames[i])
@@ -37,19 +37,16 @@ _Bool			ft_justfiles(t_query *qu)
 		}
 		i++;
 	}
-	if (i > 1)
-		return (1);
-	return (0);
+	return ((i > 1) ? TRUE : FALSE);
 }
 
 void			ft_linkpath(mode_t mode, char *path)
 {
 	char		buf[PATH_MAX];
-	int			ret;
 
 	if (S_ISLNK(mode))
 	{
-		while ((ret = readlink(path, buf, PATH_MAX)))
+		while ((readlink(path, buf, PATH_MAX)))
 		{
 			ft_putstr(" -> ");
 			ft_putstr(buf);
@@ -73,6 +70,7 @@ t_file			swap_part(t_file *file1)
 	tmp.size = file1->size;
 	tmp.mtime = file1->mtime;
 	tmp.st_rdev = file1->st_rdev;
+	tmp.attr = file1->attr;
 	return (tmp);
 }
 
@@ -89,18 +87,24 @@ void			dev_hints(t_file *file, int min, int maj)
 	ft_putstr("  ");
 }
 
+/*
+** Sorry, i was really half-bored to Define colors...
+*/
+
 void			ft_putcoloredif(t_query *qu, mode_t mode, char *name)
 {
 	if (ft_strchr(qu->fl, 'G'))
 	{
 		if (S_ISDIR(mode))
-			ft_putstr(ANSI_COLOR_CYAN);
+		{
+			ft_putstr("\x1b[36m\e[1m");
+			if ((mode & S_IROTH) && (mode & S_IWOTH) && (mode & S_IXOTH))
+				ft_putstr("\x1b[0m\e[30m\e[42m");
+		}
 		else if (S_ISREG(mode))
 		{
-			if (mode & S_IXUSR || mode & S_IXGRP || mode & S_IXOTH)
-				ft_putstr(ANSI_COLOR_RED);
-			else
-				ft_putstr(ANSI_COLOR_RESET);
+			(mode & S_IXUSR || mode & S_IXGRP || mode & S_IXOTH)
+			? ft_putstr(ANSI_COLOR_RED) : ft_putstr(ANSI_COLOR_RESET);
 		}
 		else if (S_ISLNK(mode))
 			ft_putstr(ANSI_COLOR_MAGENTA);
@@ -109,8 +113,9 @@ void			ft_putcoloredif(t_query *qu, mode_t mode, char *name)
 		else if (S_ISSOCK(mode))
 			ft_putstr(ANSI_COLOR_GREEN);
 		else if (S_ISCHR(mode))
-			ft_putstr(ANSI_COLOR_BLUE);
+			ft_putstr("\e[43m\x1b[34m");
+		else if (S_ISBLK(mode))
+			ft_putstr("\033[1m\033[32m");
 	}
-	ft_putstr(name);
-	ft_putstr(ANSI_COLOR_RESET);
+	ft_outname(name);
 }

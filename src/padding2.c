@@ -6,20 +6,19 @@
 /*   By: dcherend <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/05 17:02:50 by dcherend          #+#    #+#             */
-/*   Updated: 2018/07/05 17:14:38 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/07/06 15:41:38 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
-int 			padding_min(t_file *file)
+int				padding_min(t_file *file)
 {
 	t_file		*tmp;
-	int 		len;
-	int 		padd;
+	int			len;
+	int			padd;
 
 	padd = 0;
-	len = 0;
 	tmp = file;
 	while (tmp)
 	{
@@ -31,14 +30,13 @@ int 			padding_min(t_file *file)
 	return (padd);
 }
 
-int 			padding_maj(t_file *file)
+int				padding_maj(t_file *file)
 {
 	t_file		*tmp;
-	int 		len;
-	int 		padd;
+	int			len;
+	int			padd;
 
 	padd = 0;
-	len = 0;
 	tmp = file;
 	while (tmp)
 	{
@@ -49,4 +47,3 @@ int 			padding_maj(t_file *file)
 	}
 	return (padd);
 }
-

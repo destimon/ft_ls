@@ -6,18 +6,23 @@
 /*   By: dcherend <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/22 13:03:54 by dcherend          #+#    #+#             */
-/*   Updated: 2018/07/05 19:16:15 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/07/06 15:56:56 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
+
+static	void			ft_direrr(char *name)
+{
+	free(name);
+	ft_wrong_dir(strerror(errno), name);
+}
 
 t_dirs					*dirs_alloc(char *name)
 {
 	t_dirs				*dirs;
 	DIR					*dir;
 	char				*slash;
-	struct dirent		*sd;
 	struct stat			stats;
 
 	if ((dir = opendir(name)))
@@ -27,17 +32,17 @@ t_dirs					*dirs_alloc(char *name)
 		slash = ft_strdup("/");
 		dirs->name = ft_strdup(name);
 		dirs->path = ft_strjoin(name, slash);
-		lstat(dirs->path, &stats);
-		dirs->mtime = stats.st_mtimespec;
 		free(name);
 		free(slash);
+		lstat(dirs->path, &stats);
+		dirs->mtime = stats.st_mtimespec;
 		dirs->dirstruct = dir;
 		dirs->file = NULL;
 		dirs->next = NULL;
 		return (dirs);
 	}
 	else
-		ft_wrong_dir(strerror(errno), name);
+		ft_direrr(name);
 	return (NULL);
 }
 
@@ -54,43 +59,49 @@ void					dirs_free(t_dirs *dirs)
 	}
 }
 
-t_dirs					*ft_passdirs(t_query *qu, char **fnames)
+static void				ft_passdirs2(t_dirs **dir, t_dirs **nw, char **fnames)
 {
-	int 				i;
-	t_dirs 				*dir;
-	t_dirs 				*start;
-	t_dirs 				*nw;
-	_Bool 				check;
+	int					i;
+	t_dirs				*dir2;
+	t_dirs				*nw2;
+
+	nw2 = *nw;
+	dir2 = *dir;
+	i = 0;
+	while (fnames[i])
+	{
+		nw2 = dirs_alloc(fnames[i]);
+		if (nw2)
+		{
+			dir2->next = nw2;
+			dir2 = dir2->next;
+		}
+		i++;
+	}
+}
+
+t_dirs					*ft_passdirs(char **fnames)
+{
+	int					i;
+	t_dirs				*dir;
+	t_dirs				*start;
+	t_dirs				*nw;
 
 	i = 0;
-	check = 0;
 	while (fnames[i])
 	{
 		if ((nw = dirs_alloc(fnames[i])))
 		{
 			dir = nw;
 			start = dir;
-			check = 1;
-			break;
+			break ;
 		}
 		i++;
 	}
-	if ((check == 0 || ft_elems(fnames) == 0))
-		return (NULL);
-	if (ft_elems(fnames) > 0 && nw)
+	if (ft_elems(fnames) > 0 && nw && (i += 1))
 	{
-		i += 1;
-		while (fnames[i])
-		{
-			nw = dirs_alloc(fnames[i]);
-			if (nw)
-			{
-				check = 1;
-				dir->next = nw;
-				dir = dir->next;
-			}
-			i++;
-		}
+		ft_passdirs2(&dir, &nw, &fnames[i]);
+		return (start);
 	}
-	return (start);
+	return (NULL);
 }

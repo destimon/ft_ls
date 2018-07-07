@@ -6,33 +6,41 @@
 /*   By: dcherend <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 12:51:00 by dcherend          #+#    #+#             */
-/*   Updated: 2018/07/05 18:46:45 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/07/07 14:03:38 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/ft_ls.h"
 
-static void     simple(t_query *qu, t_dirs *dir, _Bool isFiles)
+static void		dir_output(t_dirs *dir, char *name)
 {
-	t_file      *file;
-	_Bool       check;
+	static int	i = 0;
 
-	(dir->next) ? (check = 1) : (check = isFiles);
+	if (i != 0)
+		ft_putstr("\n");
+	ft_putstr(name);
+	ft_putendl(":");
+	i++;
+}
+
+void			simple(t_query *qu, t_dirs *dir, _Bool isfiles)
+{
+	t_file		*file;
+	_Bool		check;
+
+	check = (dir->next) ? (TRUE) : (isfiles);
 	while (dir)
 	{
 		if (check)
-		{
-			ft_putstr("\n");
-			ft_putstr(dir->name);
-			ft_putendl(":");
-		}
+			dir_output(dir, dir->name);
 		file = dir->file;
 		while (file)
 		{
-			if ((ft_strchr(qu->fl, 'a') || file->name[0] != '.'))
+			if ((ft_strchr(qu->fl, 'a')
+			|| ft_strchr(qu->fl, 'f') || file->name[0] != '.'))
 			{
 				ft_putcoloredif(qu, file->mode, file->name);
-				ft_putendl("");
+				ft_putstr("\n");
 			}
 			file = file->next;
 		}
@@ -42,24 +50,28 @@ static void     simple(t_query *qu, t_dirs *dir, _Bool isFiles)
 	}
 }
 
-static void     listed(t_query *qu, t_dirs *dir, _Bool isFiles)
+static void		listed(t_query *qu, t_dirs *dir, _Bool isfiles)
 {
-	t_dirs      *copy;
-	t_file      *fl;
-	_Bool       check;
+	t_dirs		*copy;
+	t_file		*fl;
+	_Bool		check;
+	_Bool		i;
 
+	i = FALSE;
 	copy = dir;
-	(copy->next) ? (check = 1) : (check = isFiles);
+	check = (copy->next) ? (TRUE) : (isfiles);
 	while (copy)
 	{
 		if (check)
 		{
-			ft_putstr("\n");
+			if (i != 0)
+				ft_putstr("\n");
 			ft_putstr(copy->name);
 			ft_putendl(":");
 		}
 		fl = copy->file;
 		ft_show_listed(qu, fl, 0);
+		i = TRUE;
 		copy = copy->next;
 	}
 }
@@ -74,17 +86,16 @@ static void		ft_sortdirs(t_query *qu, t_dirs *dir)
 		ft_dirs_timesort(qu, tmp);
 }
 
-void            ft_show(t_query *qu, t_dirs *dir, _Bool isFiles)
+void			ft_show(t_query *qu, t_dirs *dir, _Bool isfiles)
 {
-	t_dirs      *copy;
-	t_file      *file;
+	t_dirs		*copy;
 
 	ft_sortdirs(qu, dir);
 	copy = dir;
-	if ((ft_strchr(qu->fl, 'l')))
-		listed(qu, copy, isFiles);
+	if ((ft_strchr(qu->fl, 'l') || ft_strchr(qu->fl, 'g')))
+		listed(qu, copy, isfiles);
 	else
-		simple(qu, copy, isFiles);
+		simple(qu, copy, isfiles);
 	if ((ft_strchr(qu->fl, 'R')))
 		ft_recursion(qu, dir);
 }

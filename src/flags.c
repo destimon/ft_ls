@@ -6,7 +6,7 @@
 /*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/22 12:41:52 by dcherend          #+#    #+#             */
-/*   Updated: 2018/07/04 19:01:52 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/07/07 09:44:20 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ static void		ft_options(t_query *qu, char *opt)
 	while (opt[i])
 	{
 		if (opt[i] == 'l' || opt[i] == 'R' || opt[i] == 'a' ||
-			opt[i] == 'r' || opt[i] == 't' || opt[i] == 'G')
+			opt[i] == 'r' || opt[i] == 't' || opt[i] == 'G' ||
+			opt[i] == 'f' || opt[i] == 'g' || opt[i] == 'o' ||
+			opt[i] == '@')
 			ft_cmpflags(qu, opt[i]);
 		else
 			ft_wrong_option(opt[i]);
@@ -84,7 +86,7 @@ t_query			*ft_flags(char **av, int ac)
 	i = 1;
 	while (av[i])
 	{
-		if (av[i][0] != '-')
+		if (av[i][0] != '-' || !av[i][1])
 			break ;
 		ft_options(qu, av[i]);
 		i++;

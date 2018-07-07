@@ -19,7 +19,7 @@ void		ft_wrong_option(char opt)
 		ft_putstr("ft_ls: ");
 		ft_putstr("illegal option -- ");
 		ft_putchar(opt);
-		ft_putstr("\nusage: ft_ls [-lRart] [file ...]");
+		ft_putstr("\nusage: ft_ls [-@afGgloRrt] [file ...]");
 		ft_putstr("\n");
 		exit(0);
 	}

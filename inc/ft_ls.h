@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcherend <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/22 12:41:17 by dcherend          #+#    #+#             */
-/*   Updated: 2018/07/05 19:38:00 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/07/07 12:29:19 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,32 @@
 # include <stdio.h>
 # include <string.h>
 # include <errno.h>
+# include <sys/xattr.h>
+# include <fcntl.h>
+# include <string.h>
+# include <termios.h>
+# include <sys/acl.h>
 
-# define FL_SIZE 6
+# define FL_SIZE 10
 
 /*
- * lartRG (6)
- */
+** lartRGf@o (10)
+*/
 
 # define MAJOR(x)((int32_t)(((u_int32_t)(x) >> 24) & 0xff))
 # define MINOR(x)((int32_t)((x) & 0xffffff))
 
-#define ANSI_COLOR_RED     "\x1b[31m"
-#define ANSI_COLOR_GREEN   "\x1b[32m"
-#define ANSI_COLOR_YELLOW  "\x1b[33m"
-#define ANSI_COLOR_BLUE    "\x1b[34m"
-#define ANSI_COLOR_MAGENTA "\x1b[35m"
-#define ANSI_COLOR_CYAN    "\x1b[36m"
-#define ANSI_COLOR_RESET   "\x1b[0m"
+# define ANSI_COLOR_RED		"\x1b[31m"
+# define ANSI_COLOR_GREEN	"\x1b[32m"
+# define ANSI_COLOR_YELLOW	"\x1b[33m"
+# define ANSI_COLOR_BLUE		"\x1b[34m"
+# define ANSI_COLOR_MAGENTA	"\x1b[35m"
+# define ANSI_COLOR_CYAN		"\x1b[36m"
+# define ANSI_COLOR_RESET	"\x1b[0m"
 
 typedef struct		s_query
 {
-	char			fl[6];
+	char			fl[FL_SIZE];
 	char			**fnames;
 }					t_query;
 
@@ -62,6 +67,7 @@ typedef struct		s_file
 	off_t			size;
 	dev_t			st_rdev;
 	struct timespec	mtime;
+	char			*attr;
 	struct s_file	*next;
 }					t_file;
 
@@ -91,7 +97,7 @@ t_query				*ft_flags(char **av, int ac);
 */
 t_dirs				*dirs_alloc(char *name);
 void				dirs_free(t_dirs *dirs);
-t_dirs				*ft_passdirs(t_query *qu, char **fnames);
+t_dirs				*ft_passdirs(char **fnames);
 
 /*
 ** FILES.
@@ -117,8 +123,13 @@ void				ft_dirs_timesort(t_query *qu, t_dirs *dir);
 /*
 ** SHOW.
 */
-void				ft_show(t_query *qu, t_dirs *dir, _Bool isFiles);
-void				ft_show_listed(t_query *qu, t_file *file, _Bool isFile);
+void				ft_show(t_query *qu, t_dirs *dir, _Bool isfiles);
+void				ft_show_listed(t_query *qu, t_file *file, _Bool isfile);
+void				simple(t_query *qu, t_dirs *dir, _Bool isfiles);
+void				ft_permissions(char *path, mode_t st_mode);
+void				ft_modifydate(struct timespec mtime);
+void				ft_pwdgroup(t_query *qu, t_file *file, int spuid,
+					int spgid);
 
 /*
 ** ERRORS.
@@ -153,10 +164,21 @@ int					padding_links(t_file *file);
 int					padding_size(t_file *file);
 int					padding_uid(t_file *file);
 int					padding_grp(t_file *file);
+void				swap_part2(t_file **file1, t_file tmp);
 
 /*
 ** PADDING 2.
 */
-int 				padding_min(t_file *file);
-int 				padding_maj(t_file *file);
+int					padding_min(t_file *file);
+int					padding_maj(t_file *file);
+
+/*
+** ETC.
+*/
+int					ft_attrib(char *path);
+char				*ft_getattr(char *path);
+void				ft_outname(char *str);
+void				ft_show_listed2(t_file *tmp, t_query *qu, int spaces[],
+								_Bool isfile);
+
 #endif

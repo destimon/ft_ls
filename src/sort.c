@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sort.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcherend <dcherend@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dcherend <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/22 12:54:23 by dcherend          #+#    #+#             */
-/*   Updated: 2018/07/05 10:21:24 by dcherend         ###   ########.fr       */
+/*   Updated: 2018/07/06 19:14:48 by dcherend         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@ void			ft_order(t_query *qu)
 	int			check;
 	int			length;
 
+	if (ft_strchr(qu->fl, 'f'))
+		return ;
 	length = ft_elems(qu->fnames);
 	i = 1;
 	check = 1;
-	while (check < length)
+	while (check <= length)
 	{
 		while (i < length)
 		{
@@ -70,17 +72,8 @@ void			ft_file_swap(t_file *file1, t_file *file2)
 	file1->size = file2->size;
 	file1->mtime = file2->mtime;
 	file1->st_rdev = file2->st_rdev;
-	file2->name = tmp.name;
-	file2->path = tmp.path;
-	file2->type = tmp.type;
-	file2->mode = tmp.mode;
-	file2->nlink = tmp.nlink;
-	file2->uid = tmp.uid;
-	file2->gid = tmp.gid;
-	file2->blocks = tmp.blocks;
-	file2->size = tmp.size;
-	file2->mtime = tmp.mtime;
-	file2->st_rdev = tmp.st_rdev;
+	file1->attr = file2->attr;
+	swap_part2(&file2, tmp);
 }
 
 void			ft_timesort(t_query *qu, t_file *file)
@@ -89,10 +82,12 @@ void			ft_timesort(t_query *qu, t_file *file)
 	int			bub;
 	int			i;
 
-	start = file;
 	i = 0;
+	if (ft_strchr(qu->fl, 'f'))
+		return ;
+	start = file;
 	bub = ft_file_amount(file);
-	while (i < bub)
+	while (i <= bub)
 	{
 		while (file->next)
 		{
@@ -116,10 +111,12 @@ void			ft_file_sort(t_query *qu, t_file *file)
 	int			i;
 	t_file		*start;
 
-	start = file;
+	if (ft_strchr(qu->fl, 'f'))
+		return ;
 	i = 0;
+	start = file;
 	bub = ft_file_amount(file);
-	while (i < bub)
+	while (i <= bub)
 	{
 		while (file->next)
 		{
